@@ -1,0 +1,52 @@
+version: "3"
+services:
+  producer:
+    build: producer
+    container_name: producer
+    environment:
+      - KAFKA_BROKER=pkc-ldvr1.asia-southeast1.gcp.confluent.cloud:9092
+      - KAFKA_TOPIC=test
+  consumer1:
+    build: consumer
+    container_name: consumer
+    environment:
+      - KAFKA_BROKER=pkc-ldvr1.asia-southeast1.gcp.confluent.cloud:9092
+      - KAFKA_TOPIC=test
+    depends_on:
+      - producer
+  # consumer2:
+  #   build: consumer2
+  #   environment:
+  #     - KAFKA_BROKER=pkc-ldvr1.asia-southeast1.gcp.confluent.cloud:9092
+  #     - KAFKA_TOPIC=test
+  #     - KAFKA_GROUP_ID=test-consumer-group
+  #   depends_on:
+  #     - producer
+  # ksqldb-server:
+  #   image: confluentinc/ksqldb-server:0.8.1
+  #   hostname: ksqldb-server
+  #   container_name: ksqldb-server
+  #   ports:
+  #     - "8088:8088"
+  #   environment:
+  #     KSQL_LISTENERS: http://0.0.0.0:8088
+  #     KSQL_BOOTSTRAP_SERVERS: pkc-ldvr1.asia-southeast1.gcp.confluent.cloud:9092
+  #     KSQL_SASL_JAAS_CONFIG: >
+  #       org.apache.kafka.common.security.plain.PlainLoginModule required
+  #       username="J455WLJIMGCBRZEO"
+  #       password="sH8SgRiEy3ManX9R0HT7CTDWtcB0m1s3oZJ6lnlSMWUBydjHEpx+d+r45qL/l2CT";
+  #     KSQL_SECURITY_PROTOCOL: SASL_SSL
+  #     KSQL_SASL_MECHANISM: PLAIN
+  #     KSQL_KSQL_INTERNAL_TOPIC_REPLICAS: 3
+  #     KSQL_KSQL_SINK_REPLICAS: 3
+  #     KSQL_KSQL_STREAMS_REPLICATION_FACTOR: 3
+  #     KSQL_KSQL_LOGGING_PROCESSING_TOPIC_REPLICATION_FACTOR: 3
+  #     KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
+  #     KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
+  # ksqldb-cli:
+  #   image: confluentinc/ksqldb-cli:0.8.1
+  #   container_name: ksqldb-cli
+  #   depends_on:
+  #     - ksqldb-server
+  #   entrypoint: /bin/sh
+  #   tty: true
